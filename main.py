@@ -191,5 +191,5 @@ class object:
             counter = 0
 
 player = object
-player.Level(1,10)
+player.Level(10)
 print (player)

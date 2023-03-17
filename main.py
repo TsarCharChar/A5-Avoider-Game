@@ -172,3 +172,24 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+class object:
+    def __init__(self):
+        self.health = 10
+        self.xp = 0
+        # self.xp += xp_amount
+        self.speed = 10
+
+    def Level(self,xp_amount):
+
+        self.health += 1
+        counter = 0
+        counter += counter + 1
+        if counter < 10:
+            self.speed = -1
+            counter = 0
+
+player = object
+player.Level(1,10)
+print (player)

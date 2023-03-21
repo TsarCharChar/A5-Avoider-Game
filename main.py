@@ -91,29 +91,39 @@ def main():
 
     # Load image assets
     # Choose your own image
-    enemy = pygame.image.load("GolfBall.png").convert_alpha()
+    enemy = pygame.image.load("Pixeled bomb v1.png").convert_alpha()
     # Here is an example of scaling it to fit a 50x50 pixel size.
     enemy_image = pygame.transform.smoothscale(enemy, (50, 50))
 
     enemy_sprites = []
     # Make some number of enemies that will bounce around the screen.
     # Make a new Enemy instance each loop and add it to enemy_sprites.
+    enemy_sprites.append(Enemy(enemy_image, 100, 100))
+
+
+
 
     # This is the character you control. Choose your image.
-    player_image = pygame.image.load("Wizard.gif").convert_alpha()
+    player_image = pygame.image.load("LF1.png").convert_alpha()
     player_sprite = Sprite(player_image)
     life = 3
 
     # This is the powerup image. Choose your image.
-    powerup_image = pygame.image.load("Knight.gif").convert_alpha()
+    powerup_image = pygame.image.load("Burger.png").convert_alpha()
     # Start with an empty list of powerups and add them as the game runs.
     powerups = []
+
+    powerups.append(PowerUp(powerup_image,10,10))
+
+
 
     # Main part of the game
     is_playing = True
     # while loop
-    while is_playing:# while is_playing is True, repeat
+    while is_playing and life >= 0:# while is_playing is True, repeat
     # Modify the loop to stop when life is <= to 0.
+
+
 
         # Check for events
         for event in pygame.event.get():

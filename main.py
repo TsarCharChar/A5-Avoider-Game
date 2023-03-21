@@ -14,6 +14,8 @@ class Sprite:
         self.image = image
         self.rectangle = image.get_rect()
         self.mask = pygame.mask.from_surface(image)
+    #xp_counter is a vaible counter for level this will cause the player to gain specific affects as the game carries on
+        xp_counter = 0
 
     def set_position(self, new_position):
         self.rectangle.center = new_position
@@ -23,6 +25,13 @@ class Sprite:
 
     def is_colliding(self, other_sprite):
         return pixel_collision(self.mask, self.rectangle, other_sprite.mask, other_sprite.rectangle)
+
+#level will make it easier to have specific affects (astetic ro not) take place in a trackable and adjustable situation
+    def Level(self):
+        xp_counter += xp_counter + 1
+        if xp_counter < 10:
+            self.speed = -1
+            xp_counter = 0
 
 
 class Enemy:
@@ -96,12 +105,11 @@ def main():
     enemy_image = pygame.transform.smoothscale(enemy, (50, 50))
 
     enemy_sprites = []
+    enemy_sprites.append(Enemy(enemy_image,100,100))
+
+    #(screen, enemy_image)
     # Make some number of enemies that will bounce around the screen.
     # Make a new Enemy instance each loop and add it to enemy_sprites.
-    enemy_sprites.append(Enemy(enemy_image, 100, 100))
-
-
-
 
     # This is the character you control. Choose your image.
     player_image = pygame.image.load("LF1.png").convert_alpha()
@@ -112,18 +120,14 @@ def main():
     powerup_image = pygame.image.load("Burger.png").convert_alpha()
     # Start with an empty list of powerups and add them as the game runs.
     powerups = []
-
-    powerups.append(PowerUp(powerup_image,10,10))
-
+    powerups.append(PowerUp(powerup_image,100,100))
 
 
     # Main part of the game
     is_playing = True
     # while loop
-    while is_playing and life >= 0:# while is_playing is True, repeat
+    while is_playing and life >0 :# while is_playing is True, repeat
     # Modify the loop to stop when life is <= to 0.
-
-
 
         # Check for events
         for event in pygame.event.get():
@@ -143,6 +147,11 @@ def main():
 
         # Loop over the powerups. If the player sprite is colliding, add
         # 1 to the life.
+
+
+        # if pixel_collision(player_sprite,powerup_sprite):
+        #     life += 1
+        #     powerup_sprite -= 1
 
         # Make a list comprehension that removes powerups that are colliding with
         # the player sprite.
@@ -184,21 +193,9 @@ if __name__ == "__main__":
     main()
 
 
-class object:
-    def __init__(self):
-        self.health = 10
-        self.xp = 0
-        # self.xp += xp_amount
-        self.speed = 10
 
-    def Level(self,xp_amount):
 
-        self.health += 1
-        counter = 0
-        counter += counter + 1
-        if counter < 10:
-            self.speed = -1
-            counter = 0
+
 
 player = object
 player.Level(10)

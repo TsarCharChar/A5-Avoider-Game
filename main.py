@@ -110,6 +110,9 @@ def main():
     #(screen, enemy_image)
     # Make some number of enemies that will bounce around the screen.
     # Make a new Enemy instance each loop and add it to enemy_sprites.
+    for i in range(10):
+        enemy_sprites.append(Enemy(enemy_image, 100, 100))
+
 
     # This is the character you control. Choose your image.
     player_image = pygame.image.load("LF1.png").convert_alpha()
@@ -121,6 +124,7 @@ def main():
     # Start with an empty list of powerups and add them as the game runs.
     powerups = []
     powerups.append(PowerUp(powerup_image,100,100))
+
 
 
     # Main part of the game
@@ -144,6 +148,10 @@ def main():
         # A player is likely to overlap an enemy for a few iterations
         # of the game loop - experiment to find a small value to deduct that
         # makes the game challenging but not frustrating.
+        if player_sprite.is_colliding(enemy_sprites):
+            # enemy_sprites. (make enemy list loose enemy srprite)
+            life -= .5
+
 
         # Loop over the powerups. If the player sprite is colliding, add
         # 1 to the life.

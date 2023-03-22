@@ -14,8 +14,9 @@ class Sprite:
         self.image = image
         self.rectangle = image.get_rect()
         self.mask = pygame.mask.from_surface(image)
-    #xp_counter is a vaible counter for level this will cause the player to gain specific affects as the game carries on
-        xp_counter = 0
+
+        # xp accumulator variable
+        self.xp_counter = 0
 
     def set_position(self, new_position):
         self.rectangle.center = new_position
@@ -26,20 +27,30 @@ class Sprite:
     def is_colliding(self, other_sprite):
         return pixel_collision(self.mask, self.rectangle, other_sprite.mask, other_sprite.rectangle)
 
-#level will make it easier to have specific affects (astetic ro not) take place in a trackable and adjustable situation
+    # level will make it easier to have specific affects (astetic or not) take place in a trackable and adjustable situation
     def Level(self):
-        xp_counter += xp_counter + 1
-        if xp_counter < 10:
-            self.speed = -1
-            xp_counter = 0
+        self.xp_counter += self.xp_counter + 1
+        if self.xp_counter < 10:
+            self.speed = (self.speed[0] - 1, self.speed[1] - 1)
+        else:
+            self.LevelUp
+
+    def LevelUp(self):
+        self.speed = (self.speed[0] + 10, self.speed[1] + 10)
 
 
 class Enemy:
-    def __init__(self, image, width, height):
+    def __init__(self, image, width, height, vx, vy):
+        # starter Code
         self.image = image
         self.mask = pygame.mask.from_surface(image)
         self.rectangle = image.get_rect()
 
+        # places the enemy in a random location on the world space
+        self.rectangle.center = (random.randint(0, width), random.randint(0, height))
+
+        # sets a starting velocity
+        self.speed = (vx, vy)
         # Add code to
         # 1. Set the rectangle center to a random x and y based
         #    on the screen width and height
@@ -48,7 +59,8 @@ class Enemy:
         #    vx means "velocity in x".
 
     def move(self):
-        print("need to implement move!")
+        self.rectangle.move_ip(self.rectangle.center[0] + self.speed[0], self.rectangle.center[1] + self.speed[1])
+
         # Add code to move the rectangle instance variable in x by
         # the speed vx and in y by speed vy. The vx and vy are the
         # components of the speed instance variable tuple.
@@ -105,7 +117,8 @@ def main():
     enemy_image = pygame.transform.smoothscale(enemy, (50, 50))
 
     enemy_sprites = []
-    enemy_sprites.append(Enemy(enemy_image,100,100))
+    for i in range(30):
+        enemy_sprites.append(Enemy(enemy_image, 600, 600, 1, 1))
 
     #(screen, enemy_image)
     # Make some number of enemies that will bounce around the screen.
@@ -126,7 +139,7 @@ def main():
     # Main part of the game
     is_playing = True
     # while loop
-    while is_playing and life >0 :# while is_playing is True, repeat
+    while is_playing and life > 0:# while is_playing is True, repeat
     # Modify the loop to stop when life is <= to 0.
 
         # Check for events
@@ -157,6 +170,8 @@ def main():
         # the player sprite.
 
         # Loop over the enemy_sprites. Each enemy should call move and bounce.
+        for i in enemy_sprites:
+            i.move()
 
         # Choose a random number. Use the random number to decide to add a new
         # powerup to the powerups list. Experiment to make them appear not too
@@ -185,7 +200,7 @@ def main():
 
     # Once the game loop is done, pause, close the window and quit.
     # Pause for a few seconds
-    pygame.time.wait(2000)
+    pygame.time.wait(20)
     pygame.quit()
     sys.exit()
 

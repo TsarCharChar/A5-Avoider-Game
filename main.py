@@ -47,7 +47,7 @@ class Enemy:
         self.rectangle = image.get_rect()
 
         # places the enemy in a random location on the world space
-        self.rectangle.center = (random.randint(0, width), random.randint(0, height))
+        self.rectangle.center = (random.randint(50, width - 50), random.randint(50, height - 50))
 
         # sets a starting velocity
         self.speed = (vx, vy)
@@ -59,7 +59,7 @@ class Enemy:
         #    vx means "velocity in x".
 
     def move(self):
-        self.rectangle.move_ip(self.rectangle.center[0] + self.speed[0], self.rectangle.center[1] + self.speed[1])
+        self.rectangle.move_ip(self.speed[0], self.speed[1])
 
         # Add code to move the rectangle instance variable in x by
         # the speed vx and in y by speed vy. The vx and vy are the
@@ -68,7 +68,41 @@ class Enemy:
         # Research how to use it for this task.
 
     def bounce(self, width, height):
-        print("need to implement bounce!")
+        if self.rectangle.left < 0:
+            self.speed = (self.speed[0] * -1, self.speed[1])
+            counter = 0
+            current_x = self.rectangle.left
+            while current_x < 0:
+                current_x += 1
+                counter += 1
+                if current_x == 0:
+                    break
+            self.rectangle.move_ip(counter, 0)
+        elif self.rectangle.right > width:
+            self.speed = (self.speed[0] * -1, self.speed[1])
+            counter = 0
+            current_x = self.rectangle.right
+            while current_x > width:
+                current_x -= 1
+                counter -= 1
+            self.rectangle.move_ip(counter, 0)
+
+        if self.rectangle.top < 0:
+            self.speed = (self.speed[0], self.speed[1] * -1)
+            counter = 0
+            current_y = self.rectangle.top
+            while current_y < 0:
+                current_y += 1
+                counter += 1
+            self.rectangle.move_ip(0, counter)
+        elif self.rectangle.bottom > height:
+            self.speed = (self.speed[0], self.speed[1] * -1)
+            counter = 0
+            current_y = self.rectangle.bottom
+            while current_y > height:
+                current_y -= 1
+                counter -= 1
+            self.rectangle.move_ip(0, counter)
         # This method makes the enemy bounce off of the top/left/right/bottom
         # of the screen. For example, if you want to check if the object is
         # hitting the left side, you can test
@@ -83,7 +117,6 @@ class Enemy:
         # Make sure the speed instance variable is updated as needed.
 
     def draw(self, screen):
-        # Same draw as Sprite
         screen.blit(self.image, self.rectangle)
 
 class PowerUp:
@@ -118,7 +151,10 @@ def main():
 
     enemy_sprites = []
     for i in range(30):
-        enemy_sprites.append(Enemy(enemy_image, 600, 600, 1, 1))
+        if random.randint(0, 1):
+            enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(1, 3), random.randint(1, 3)))
+        else:
+            enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(-3, -1), random.randint(-3, -1)))
 
     #(screen, enemy_image)
     # Make some number of enemies that will bounce around the screen.
@@ -162,7 +198,7 @@ def main():
         # 1 to the life.
 
 
-        # if pixel_collision(player_sprite,powerup_sprite):
+        #if pixel_collision(player_sprite,powerup_sprite):
         #     life += 1
         #     powerup_sprite -= 1
 
@@ -171,7 +207,9 @@ def main():
 
         # Loop over the enemy_sprites. Each enemy should call move and bounce.
         for i in enemy_sprites:
+            i.bounce(width, height)
             i.move()
+
 
         # Choose a random number. Use the random number to decide to add a new
         # powerup to the powerups list. Experiment to make them appear not too
@@ -206,12 +244,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-player = object
-player.Level(10)
-print (player)

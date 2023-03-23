@@ -8,12 +8,23 @@ def pixel_collision(mask1, rect1, mask2, rect2):
     overlap = mask1.overlap(mask2, (offset_x, offset_y))
     return overlap
 
+def player_delay(clock, time, counter, player):
+    counter += clock.tick()
+    if counter >= time:
+        print('thing')
+        player.animate()
+        counter = 0
+
+
 # A basic Sprite class that can draw itself, move, and test collisions
 class Sprite:
-    def __init__(self, image):
+    def __init__(self, image, other_image):
         self.image = image
+        self.other_image = other_image
+        self.display_image = self.image
         self.rectangle = image.get_rect()
         self.mask = pygame.mask.from_surface(image)
+        self.left_foot = False
 
         # xp accumulator variable
         self.xp_counter = 0
@@ -22,10 +33,20 @@ class Sprite:
         self.rectangle.center = new_position
 
     def draw(self, screen):
-        screen.blit(self.image, self.rectangle)
+        screen.blit(self.display_image, self.rectangle)
 
     def is_colliding(self, other_sprite):
         return pixel_collision(self.mask, self.rectangle, other_sprite.mask, other_sprite.rectangle)
+
+    def animate(self):
+        if self.left_foot:
+           self.left_foot = False
+           self.display_image = self.other_image
+
+        else:
+            self.left_foot = True
+            self.display_image = self.image
+
 
     # level will make it easier to have specific affects (astetic or not) take place in a trackable and adjustable situation
     def Level(self):
@@ -139,7 +160,7 @@ def main():
     myfont = pygame.font.SysFont('monospace', 24)
 
     # Define the screen
-    width, height = 600, 400
+    width, height = 600, 600
     size = width, height
     screen = pygame.display.set_mode((width, height))
 
@@ -161,8 +182,9 @@ def main():
     # Make a new Enemy instance each loop and add it to enemy_sprites.
 
     # This is the character you control. Choose your image.
-    player_image = pygame.image.load("LF1.png").convert_alpha()
-    player_sprite = Sprite(player_image)
+    player_image1 = pygame.image.load("LF1.png").convert_alpha()
+    player_image2 = pygame.image.load("RF-1.png").convert_alpha()
+    player_sprite = Sprite(player_image1, player_image2)
     life = 3
 
     # This is the powerup image. Choose your image.
@@ -171,6 +193,9 @@ def main():
     powerups = []
     powerups.append(PowerUp(powerup_image,100,100))
 
+
+    clock = pygame.time.Clock()
+    anim_counter = 0
 
     # Main part of the game
     is_playing = True
@@ -188,6 +213,9 @@ def main():
         pos = pygame.mouse.get_pos()
         player_sprite.set_position(pos)
 
+        if anim_counter > 1000:
+            player_sprite.animate()
+            anim_counter = 0
         # Loop over the enemy sprites. If the player sprite is
         # colliding with an enemy, deduct from the life variable.
         # A player is likely to overlap an enemy for a few iterations
@@ -234,6 +262,7 @@ def main():
         # Bring all the changes to the screen into view
         pygame.display.update()
         # Pause for a few milliseconds
+        anim_counter += 20
         pygame.time.wait(20)
 
     # Once the game loop is done, pause, close the window and quit.

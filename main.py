@@ -8,38 +8,70 @@ def pixel_collision(mask1, rect1, mask2, rect2):
     overlap = mask1.overlap(mask2, (offset_x, offset_y))
     return overlap
 
+def player_delay(clock, time, counter, player):
+    counter += clock.tick()
+    if counter >= time:
+        print('thing')
+        player.animate()
+        counter = 0
+
+
 # A basic Sprite class that can draw itself, move, and test collisions
 class Sprite:
-    def __init__(self, image):
+    def __init__(self, image, other_image):
         self.image = image
+        self.other_image = other_image
+        self.display_image = self.image
         self.rectangle = image.get_rect()
         self.mask = pygame.mask.from_surface(image)
-    #xp_counter is a vaible counter for level this will cause the player to gain specific affects as the game carries on
-        xp_counter = 0
+        self.left_foot = False
+
+        # xp accumulator variable
+        self.xp_counter = 0
 
     def set_position(self, new_position):
         self.rectangle.center = new_position
 
     def draw(self, screen):
-        screen.blit(self.image, self.rectangle)
+        screen.blit(self.display_image, self.rectangle)
 
     def is_colliding(self, other_sprite):
         return pixel_collision(self.mask, self.rectangle, other_sprite.mask, other_sprite.rectangle)
 
-#level will make it easier to have specific affects (astetic ro not) take place in a trackable and adjustable situation
+    def animate(self):
+        if self.left_foot:
+           self.left_foot = False
+           self.display_image = self.other_image
+
+        else:
+            self.left_foot = True
+            self.display_image = self.image
+
+
+    # level will make it easier to have specific affects (astetic or not) take place in a trackable and adjustable situation
     def Level(self):
-        xp_counter += xp_counter + 1
-        if xp_counter < 10:
-            self.speed = -1
-            xp_counter = 0
+        self.xp_counter += self.xp_counter + 1
+        if self.xp_counter < 10:
+            self.speed = (self.speed[0] - 1, self.speed[1] - 1)
+        else:
+            self.LevelUp
+
+    def LevelUp(self):
+        self.speed = (self.speed[0] + 10, self.speed[1] + 10)
 
 
 class Enemy:
-    def __init__(self, image, width, height):
+    def __init__(self, image, width, height, vx, vy):
+        # starter Code
         self.image = image
         self.mask = pygame.mask.from_surface(image)
         self.rectangle = image.get_rect()
 
+        # places the enemy in a random location on the world space
+        self.rectangle.center = (random.randint(50, width - 50), random.randint(50, height - 50))
+
+        # sets a starting velocity
+        self.speed = (vx, vy)
         # Add code to
         # 1. Set the rectangle center to a random x and y based
         #    on the screen width and height
@@ -48,7 +80,8 @@ class Enemy:
         #    vx means "velocity in x".
 
     def move(self):
-        print("need to implement move!")
+        self.rectangle.move_ip(self.speed[0], self.speed[1])
+
         # Add code to move the rectangle instance variable in x by
         # the speed vx and in y by speed vy. The vx and vy are the
         # components of the speed instance variable tuple.
@@ -56,7 +89,41 @@ class Enemy:
         # Research how to use it for this task.
 
     def bounce(self, width, height):
-        print("need to implement bounce!")
+        if self.rectangle.left < 0:
+            self.speed = (self.speed[0] * -1, self.speed[1])
+            counter = 0
+            current_x = self.rectangle.left
+            while current_x < 0:
+                current_x += 1
+                counter += 1
+                if current_x == 0:
+                    break
+            self.rectangle.move_ip(counter, 0)
+        elif self.rectangle.right > width:
+            self.speed = (self.speed[0] * -1, self.speed[1])
+            counter = 0
+            current_x = self.rectangle.right
+            while current_x > width:
+                current_x -= 1
+                counter -= 1
+            self.rectangle.move_ip(counter, 0)
+
+        if self.rectangle.top < 0:
+            self.speed = (self.speed[0], self.speed[1] * -1)
+            counter = 0
+            current_y = self.rectangle.top
+            while current_y < 0:
+                current_y += 1
+                counter += 1
+            self.rectangle.move_ip(0, counter)
+        elif self.rectangle.bottom > height:
+            self.speed = (self.speed[0], self.speed[1] * -1)
+            counter = 0
+            current_y = self.rectangle.bottom
+            while current_y > height:
+                current_y -= 1
+                counter -= 1
+            self.rectangle.move_ip(0, counter)
         # This method makes the enemy bounce off of the top/left/right/bottom
         # of the screen. For example, if you want to check if the object is
         # hitting the left side, you can test
@@ -71,7 +138,6 @@ class Enemy:
         # Make sure the speed instance variable is updated as needed.
 
     def draw(self, screen):
-        # Same draw as Sprite
         screen.blit(self.image, self.rectangle)
 
 class PowerUp:
@@ -94,7 +160,7 @@ def main():
     myfont = pygame.font.SysFont('monospace', 24)
 
     # Define the screen
-    width, height = 600, 400
+    width, height = 600, 600
     size = width, height
     screen = pygame.display.set_mode((width, height))
 
@@ -105,18 +171,20 @@ def main():
     enemy_image = pygame.transform.smoothscale(enemy, (50, 50))
 
     enemy_sprites = []
-    enemy_sprites.append(Enemy(enemy_image,100,100))
+    for i in range(30):
+        if random.randint(0, 1):
+            enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(1, 3), random.randint(1, 3)))
+        else:
+            enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(-3, -1), random.randint(-3, -1)))
 
     #(screen, enemy_image)
     # Make some number of enemies that will bounce around the screen.
     # Make a new Enemy instance each loop and add it to enemy_sprites.
-    for i in range(10):
-        enemy_sprites.append(Enemy(enemy_image, 100, 100))
-
 
     # This is the character you control. Choose your image.
-    player_image = pygame.image.load("LF1.png").convert_alpha()
-    player_sprite = Sprite(player_image)
+    player_image1 = pygame.image.load("LF1.png").convert_alpha()
+    player_image2 = pygame.image.load("RF-1.png").convert_alpha()
+    player_sprite = Sprite(player_image1, player_image2)
     life = 3
 
     # This is the powerup image. Choose your image.
@@ -126,11 +194,13 @@ def main():
     powerups.append(PowerUp(powerup_image,100,100))
 
 
+    clock = pygame.time.Clock()
+    anim_counter = 0
 
     # Main part of the game
     is_playing = True
     # while loop
-    while is_playing and life >0 :# while is_playing is True, repeat
+    while is_playing and life > 0:# while is_playing is True, repeat
     # Modify the loop to stop when life is <= to 0.
 
         # Check for events
@@ -143,21 +213,20 @@ def main():
         pos = pygame.mouse.get_pos()
         player_sprite.set_position(pos)
 
+        if anim_counter > 1000:
+            player_sprite.animate()
+            anim_counter = 0
         # Loop over the enemy sprites. If the player sprite is
         # colliding with an enemy, deduct from the life variable.
         # A player is likely to overlap an enemy for a few iterations
         # of the game loop - experiment to find a small value to deduct that
         # makes the game challenging but not frustrating.
-        if player_sprite.is_colliding(enemy_sprites):
-            # enemy_sprites. (make enemy list loose enemy srprite)
-            life -= .5
-
 
         # Loop over the powerups. If the player sprite is colliding, add
         # 1 to the life.
 
 
-        # if pixel_collision(player_sprite,powerup_sprite):
+        #if pixel_collision(player_sprite,powerup_sprite):
         #     life += 1
         #     powerup_sprite -= 1
 
@@ -165,6 +234,10 @@ def main():
         # the player sprite.
 
         # Loop over the enemy_sprites. Each enemy should call move and bounce.
+        for i in enemy_sprites:
+            i.bounce(width, height)
+            i.move()
+
 
         # Choose a random number. Use the random number to decide to add a new
         # powerup to the powerups list. Experiment to make them appear not too
@@ -189,22 +262,14 @@ def main():
         # Bring all the changes to the screen into view
         pygame.display.update()
         # Pause for a few milliseconds
+        anim_counter += 20
         pygame.time.wait(20)
 
     # Once the game loop is done, pause, close the window and quit.
     # Pause for a few seconds
-    pygame.time.wait(2000)
+    pygame.time.wait(20)
     pygame.quit()
     sys.exit()
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-player = object
-player.Level(10)
-print (player)

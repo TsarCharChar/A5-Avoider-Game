@@ -147,6 +147,7 @@ class PowerUp:
         self.image = image
         self.mask = pygame.mask.from_surface(image)
         self.rectangle = image.get_rect()
+        self.rectangle.center = (random.randint(0, width), random.randint(0, height))
 
     def draw(self, screen):
         # Same as Sprite

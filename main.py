@@ -26,6 +26,7 @@ class Sprite:
         self.mask = pygame.mask.from_surface(image)
         self.left_foot = False
 
+
         # xp accumulator variable
         self.xp_counter = 0
 
@@ -237,18 +238,15 @@ def main():
             for i in powerups:
                 if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
                     life += 1
-                    player_sprite.xp_counter
-                    print(player_sprite.xp_counter)
+
+                    # player_sprite.Level()
+                    # print(player_sprite.xp_counter)
 
 
         # Make a list comprehension that removes powerups that are colliding with
         # the player sprite.
             for i in powerups:
                 if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
-                    # for x in enemy_sprites:
-                        # if pixel_collision(x.mask, x.rectangle, i.mask, i.rectangle):
-                        #     enemy_sprites.remove(x)
-                        #     powerups.remove(i)
                     powerups.remove(i)
 
         # Loop over the enemy_sprites. Each enemy should call move and bounce.

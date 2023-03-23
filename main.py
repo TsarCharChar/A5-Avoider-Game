@@ -147,6 +147,7 @@ class PowerUp:
         self.image = image
         self.mask = pygame.mask.from_surface(image)
         self.rectangle = image.get_rect()
+        self.rectangle.center = (random.randint(50, width - 50), random.randint(50, height - 50))
 
     def draw(self, screen):
         # Same as Sprite
@@ -171,15 +172,17 @@ def main():
     enemy_image = pygame.transform.smoothscale(enemy, (50, 50))
 
     enemy_sprites = []
-    for i in range(30):
-        if random.randint(0, 1):
-            enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(1, 3), random.randint(1, 3)))
-        else:
-            enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(-3, -1), random.randint(-3, -1)))
+
 
     #(screen, enemy_image)
     # Make some number of enemies that will bounce around the screen.
     # Make a new Enemy instance each loop and add it to enemy_sprites.
+
+    for i in range(20):
+        if random.randint(0, 1):
+            enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(1, 3), random.randint(1, 3)))
+        else:
+            enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(-3, -1), random.randint(-3, -1)))
 
     # This is the character you control. Choose your image.
     player_image1 = pygame.image.load("LF1.png").convert_alpha()
@@ -191,7 +194,7 @@ def main():
     powerup_image = pygame.image.load("Burger.png").convert_alpha()
     # Start with an empty list of powerups and add them as the game runs.
     powerups = []
-    powerups.append(PowerUp(powerup_image,100,100))
+    powerups.append(PowerUp(powerup_image,600,600))
 
 
     clock = pygame.time.Clock()
@@ -222,16 +225,31 @@ def main():
         # of the game loop - experiment to find a small value to deduct that
         # makes the game challenging but not frustrating.
 
+            for i in enemy_sprites:
+                if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
+                    life -= 0.1
+                    enemy_sprites.remove(i)
+                    enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(-3, -1), random.randint(-3, -1)))
+
         # Loop over the powerups. If the player sprite is colliding, add
         # 1 to the life.
 
+            for i in powerups:
+                if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
+                    life += 1
+                    player_sprite.xp_counter
+                    print(player_sprite.xp_counter)
 
-        #if pixel_collision(player_sprite,powerup_sprite):
-        #     life += 1
-        #     powerup_sprite -= 1
 
         # Make a list comprehension that removes powerups that are colliding with
         # the player sprite.
+            for i in powerups:
+                if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
+                    # for x in enemy_sprites:
+                        # if pixel_collision(x.mask, x.rectangle, i.mask, i.rectangle):
+                        #     enemy_sprites.remove(x)
+                        #     powerups.remove(i)
+                    powerups.remove(i)
 
         # Loop over the enemy_sprites. Each enemy should call move and bounce.
         for i in enemy_sprites:
@@ -239,9 +257,16 @@ def main():
             i.move()
 
 
+
         # Choose a random number. Use the random number to decide to add a new
         # powerup to the powerups list. Experiment to make them appear not too
         # often, so the game is challenging.
+        if len(powerups) < 3:
+            for i in range(1):
+                x =  random.randint(1, 300)
+                if x == random.randint(1, 100):
+                    for i in range( 1):
+                        powerups.append(PowerUp(powerup_image, 600, 600))
 
         # Erase the screen with a background color
         screen.fill((0,100,50)) # fill the window with a color

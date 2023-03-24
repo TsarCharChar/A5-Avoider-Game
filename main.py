@@ -169,9 +169,9 @@ def main():
 
     # Load image assets
     # Choose your own image
-    enemy = pygame.image.load("Pixeled bomb v1.png").convert_alpha()
+    enemy = pygame.image.load("Cop_stationary.png").convert_alpha()
     # Here is an example of scaling it to fit a 50x50 pixel size.
-    enemy_image = pygame.transform.smoothscale(enemy, (50, 50))
+    enemy_image = pygame.transform.smoothscale(enemy, (130, 130))
 
     enemy_sprites = []
 

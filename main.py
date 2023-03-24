@@ -175,7 +175,7 @@ def main():
     # Choose your own image
     enemy = pygame.image.load("Cop_stationary.png").convert_alpha()
     # Here is an example of scaling it to fit a 50x50 pixel size.
-    enemy_image = pygame.transform.smoothscale(enemy, (130, 130))
+    enemy_image = pygame.transform.smoothscale(enemy, (50, 50))
 
     enemy_sprites = []
 
@@ -191,8 +191,10 @@ def main():
             enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(-3, -1), random.randint(-3, -1)))
 
     # This is the character you control. Choose your image.
-    player_image1 = pygame.image.load("LF1.png").convert_alpha()
-    player_image2 = pygame.image.load("RF-1.png").convert_alpha()
+    player_image1 = pygame.image.load("LF_BG1.png").convert_alpha()
+    player_image2 = pygame.image.load("RF_BG-1.png").convert_alpha()
+    player_image1 = pygame.transform.smoothscale(player_image1, (40, 40))
+    player_image2 = pygame.transform.smoothscale(player_image2, (40, 40))
     player_sprite = Sprite(player_image1, player_image2)
     life = 3
 
@@ -201,7 +203,7 @@ def main():
     powerup_image1 = pygame.transform.smoothscale(powerup_image, (80, 80))
     # Start with an empty list of powerups and add them as the game runs.
     powerups = []
-    powerups.append(PowerUp(powerup_image1,600,600))
+    powerups.append(PowerUp(powerup_image1, 600, 600))
 
 
     pygame.mixer.music.load("Gangsta Music.ogg", 'ogg')
@@ -237,8 +239,6 @@ def main():
         for i in enemy_sprites:
             if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
                 life -= 0.1
-                enemy_sprites.remove(i)
-                enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(-3, -1), random.randint(-3, -1)))
 
         # Loop over the powerups. If the player sprite is colliding, add
         # 1 to the life.
@@ -292,9 +292,35 @@ def main():
         label = myfont.render(text, True, (255, 255, 0))
         screen.blit(label, (20, 20))
 
-        level = "Level: " + str(player_sprite.current_level)
+        level = "Level " + str(player_sprite.current_level)
+        if player_sprite.current_level == 0:
+            level += ' nobody'
+
+        elif player_sprite.current_level > 0 and player_sprite.current_level < 5:
+            level += ' Crook'
+
+        elif player_sprite.current_level >= 5 and player_sprite.current_level < 20:
+            level += ' Theif'
+
+        elif player_sprite.current_level >= 20 and player_sprite.current_level < 50:
+            level += ' Cook'
+
+        elif player_sprite.current_level >= 50 and player_sprite.current_level < 75:
+            level += ' Enforcer'
+
+        elif player_sprite.current_level >= 75 and player_sprite.current_level < 100:
+            level += ' Fixer'
+
+        elif player_sprite.current_level >= 100 and player_sprite.current_level < 500:
+            level += ' Boss'
+
+        elif player_sprite.current_level >= 500 and player_sprite.current_level < 1000:
+            level += ' Big Boss'
+
+        else:
+            level += ' Godfather'
         label = myfont.render(level, True, (255, 255, 0))
-        screen.blit(label, (400, 20))
+        screen.blit(label, (300, 20))
         # Bring all the changes to the screen into view
         pygame.display.update()
         # Pause for a few milliseconds

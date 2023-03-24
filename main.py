@@ -49,6 +49,7 @@ class Sprite:
             self.display_image = self.image
 
 
+
     # level will make it easier to have specific affects (astetic or not) take place in a trackable and adjustable situation
     def Level(self):
         self.xp_counter += self.xp_counter + 1

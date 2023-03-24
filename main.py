@@ -72,8 +72,8 @@ class Sprite:
 
     # level will make it easier to have specific affects (astetic or not) take place in a trackable and adjustable situation
     def Level(self):
-        self.xp_counter += 1
-        if self.xp_counter < 3:
+        self.xp_counter += random.randint(1, 4)
+        if self.xp_counter < 10:
             self.speed = (self.speed[0] - 1, self.speed[1] - 1)
         else:
             self.LevelUp()
@@ -85,11 +85,14 @@ class Sprite:
 
 
 class Enemy:
-    def __init__(self, image, width, height, vx, vy):
+    def __init__(self, image1, image2, width, height, vx, vy):
         # starter Code
-        self.image = image
-        self.mask = pygame.mask.from_surface(image)
-        self.rectangle = image.get_rect()
+        self.image1 = image1
+        self.image2 = image2
+        self.mask = pygame.mask.from_surface(image1)
+        self.rectangle = image1.get_rect()
+        self.display_image = image1
+        self.left_foot = False
 
         # places the enemy in a random location on the world space
         self.rectangle.center = (random.randint(50, width - 50), random.randint(50, height - 50))
@@ -141,7 +144,16 @@ class Enemy:
             self.rectangle.move_ip(0, counter)
 
     def draw(self, screen):
-        screen.blit(self.image, self.rectangle)
+        screen.blit(self.display_image, self.rectangle)
+
+    def animate(self):
+        if self.left_foot:
+            self.left_foot = False
+            self.display_image = self.image2
+        else:
+            self.left_foot = True
+            self.display_image = self.image1
+
 
 class PowerUp:
     def __init__(self, image, width, height):
@@ -174,18 +186,20 @@ def main():
 
     # Load image assets
     # Choose your own image
-    enemy = pygame.image.load("Cop_stationary.png").convert_alpha()
+    enemy1 = pygame.image.load("cop_left_Foot.png").convert_alpha()
+    enemy2 = pygame.image.load("cop_right_foot.png").convert_alpha()
     # Here is an example of scaling it to fit a 50x50 pixel size.
-    enemy_image = pygame.transform.smoothscale(enemy, (50, 50))
+    enemy_image1 = pygame.transform.smoothscale(enemy1, (50, 50))
+    enemy_image2 = pygame.transform.smoothscale(enemy2, (50, 50))
 
     enemy_sprites = []
 
     # Create police
     for i in range(20):
         if random.randint(0, 1):
-            enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(1, 3), random.randint(1, 3)))
+            enemy_sprites.append(Enemy(enemy_image1, enemy_image2, 600, 600, random.randint(1, 3), random.randint(1, 3)))
         else:
-            enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(-3, -1), random.randint(-3, -1)))
+            enemy_sprites.append(Enemy(enemy_image2, enemy_image1, 600, 600, random.randint(-3, -1), random.randint(-3, -1)))
 
     # This is the character you control. Choose your image.
 
@@ -231,6 +245,8 @@ def main():
         # Check to see if the animation timer is up
         if anim_counter > 500:
             player_sprite.animate()
+            for i in enemy_sprites:
+                i.animate()
             anim_counter = 0
         # Loop over the enemy sprites. If the player sprite is
         # colliding with an enemy, deduct from the life variable.

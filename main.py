@@ -25,6 +25,8 @@ class Sprite:
         self.rectangle = image.get_rect()
         self.mask = pygame.mask.from_surface(image)
         self.left_foot = False
+        self.current_level = 0
+        self.speed = (15, 15)
 
 
         # xp accumulator variable
@@ -52,14 +54,16 @@ class Sprite:
 
     # level will make it easier to have specific affects (astetic or not) take place in a trackable and adjustable situation
     def Level(self):
-        self.xp_counter += self.xp_counter + 1
-        if self.xp_counter < 10:
+        self.xp_counter += 1
+        if self.xp_counter < 3:
             self.speed = (self.speed[0] - 1, self.speed[1] - 1)
         else:
-            self.LevelUp
+            self.LevelUp()
+            self.xp_counter = 0
 
     def LevelUp(self):
         self.speed = (self.speed[0] + 10, self.speed[1] + 10)
+        self.current_level += 1
 
 
 class Enemy:
@@ -228,18 +232,20 @@ def main():
         # of the game loop - experiment to find a small value to deduct that
         # makes the game challenging but not frustrating.
 
-            for i in enemy_sprites:
-                if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
-                    life -= 0.1
-                    enemy_sprites.remove(i)
-                    enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(-3, -1), random.randint(-3, -1)))
+        for i in enemy_sprites:
+            if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
+                life -= 0.1
+                enemy_sprites.remove(i)
+                enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(-3, -1), random.randint(-3, -1)))
 
         # Loop over the powerups. If the player sprite is colliding, add
         # 1 to the life.
 
-            for i in powerups:
-                if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
-                    life += 1
+        for i in powerups:
+            if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
+                life += 1
+                player_sprite.Level()
+                print(player_sprite.xp_counter)
 
                     # player_sprite.Level()
                     # print(player_sprite.xp_counter)
@@ -247,9 +253,9 @@ def main():
 
         # Make a list comprehension that removes powerups that are colliding with
         # the player sprite.
-            for i in powerups:
-                if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
-                    powerups.remove(i)
+        for i in powerups:
+            if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
+                powerups.remove(i)
 
         # Loop over the enemy_sprites. Each enemy should call move and bounce.
         for i in enemy_sprites:
@@ -265,7 +271,7 @@ def main():
             for i in range(1):
                 x =  random.randint(1, 300)
                 if x == random.randint(1, 100):
-                    for i in range( 1):
+                    for i in range(1):
                         powerups.append(PowerUp(powerup_image, 600, 600))
 
         # Erase the screen with a background color
@@ -284,7 +290,7 @@ def main():
         label = myfont.render(text, True, (255, 255, 0))
         screen.blit(label, (20, 20))
 
-        level = "Level: " + str('%.1f' % life)
+        level = "Level: " + str(player_sprite.current_level)
         label = myfont.render(level, True, (255, 255, 0))
         screen.blit(label, (400, 20))
         # Bring all the changes to the screen into view

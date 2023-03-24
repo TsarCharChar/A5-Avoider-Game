@@ -204,12 +204,14 @@ def main():
     powerups.append(PowerUp(powerup_image1,600,600))
 
 
-    clock = pygame.time.Clock()
+    pygame.mixer.music.load("Gangsta Music.ogg", 'ogg')
+
     anim_counter = 0
 
     # Main part of the game
     is_playing = True
     # while loop
+    pygame.mixer.music.play(-1)
     while is_playing and life > 0:# while is_playing is True, repeat
     # Modify the loop to stop when life is <= to 0.
 

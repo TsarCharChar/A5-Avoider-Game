@@ -269,10 +269,13 @@ def main():
         player_sprite.draw(screen)
 
         # Write the life to the screen.
-        text = "Life: " + str('%.1f' % life)
+        text = "Money: " + str('%.1f' % life)
         label = myfont.render(text, True, (255, 255, 0))
         screen.blit(label, (20, 20))
 
+        level = "Level: " + str('%.1f' % life)
+        label = myfont.render(level, True, (255, 255, 0))
+        screen.blit(label, (400, 20))
         # Bring all the changes to the screen into view
         pygame.display.update()
         # Pause for a few milliseconds

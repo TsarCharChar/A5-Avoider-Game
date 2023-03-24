@@ -1,3 +1,28 @@
+#By Charlie Sinclair and Connor Patterson
+
+# You are a nobody trying to make it in the crime world, can you avoid the cops and become the Godfather?
+
+
+
+# How to Play:
+#   Use mouse to move the character
+#   Collect Money Bags and rise through the crime world
+#   Avoid the Cops
+#   If you touch a cop, you need to pay money, if you don't have enough money then you get arrested and you lose
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import pygame, sys, math, random
 
 # Test if two sprite masks overlap
@@ -7,13 +32,6 @@ def pixel_collision(mask1, rect1, mask2, rect2):
     # See if the two masks at the offset are overlapping.
     overlap = mask1.overlap(mask2, (offset_x, offset_y))
     return overlap
-
-def player_delay(clock, time, counter, player):
-    counter += clock.tick()
-    if counter >= time:
-        print('thing')
-        player.animate()
-        counter = 0
 
 
 # A basic Sprite class that can draw itself, move, and test collisions
@@ -32,16 +50,16 @@ class Sprite:
         # xp accumulator variable
         self.xp_counter = 0
 
-    def set_position(self, new_position):
+    def set_position(self, new_position): # set position of player
         self.rectangle.center = new_position
 
-    def draw(self, screen):
+    def draw(self, screen): # draw on screen
         screen.blit(self.display_image, self.rectangle)
 
-    def is_colliding(self, other_sprite):
+    def is_colliding(self, other_sprite): # check if colliding
         return pixel_collision(self.mask, self.rectangle, other_sprite.mask, other_sprite.rectangle)
 
-    def animate(self):
+    def animate(self): # Change animation sprite
         if self.left_foot:
            self.left_foot = False
            self.display_image = self.other_image
@@ -78,22 +96,13 @@ class Enemy:
 
         # sets a starting velocity
         self.speed = (vx, vy)
-        # Add code to
-        # 1. Set the rectangle center to a random x and y based
-        #    on the screen width and height
-        # 2. Set a speed instance variable that holds a tuple (vx, vy)
-        #    which specifies how much the rectangle moves each time.
-        #    vx means "velocity in x".
 
+
+    # Move
     def move(self):
         self.rectangle.move_ip(self.speed[0], self.speed[1])
 
-        # Add code to move the rectangle instance variable in x by
-        # the speed vx and in y by speed vy. The vx and vy are the
-        # components of the speed instance variable tuple.
-        # A useful method of rectangle is pygame's move_ip method.
-        # Research how to use it for this task.
-
+    # Bounce on the edge of the screen
     def bounce(self, width, height):
         if self.rectangle.left < 0:
             self.speed = (self.speed[0] * -1, self.speed[1])
@@ -130,18 +139,6 @@ class Enemy:
                 current_y -= 1
                 counter -= 1
             self.rectangle.move_ip(0, counter)
-        # This method makes the enemy bounce off of the top/left/right/bottom
-        # of the screen. For example, if you want to check if the object is
-        # hitting the left side, you can test
-        # if self.rectangle.left < 0:
-        # The rectangle.left tests the left side of the rectangle. You will
-        # want to use .right .top .bottom for the other sides.
-        # The height and width parameters gives the screen boundaries.
-        # If a hit of the edge of the screen is detected on the top or bottom
-        # you want to negate (multiply by -1) the vy component of the speed instance
-        # variable. If a hit is detected on the left or right of the screen, you
-        # want to negate the vx component of the speed.
-        # Make sure the speed instance variable is updated as needed.
 
     def draw(self, screen):
         screen.blit(self.image, self.rectangle)
@@ -150,10 +147,14 @@ class PowerUp:
     def __init__(self, image, width, height):
         # Set the PowerUp position randomly like is done for the Enemy class.
         # There is no speed for this object as it does not move.
+        # Default code
         self.image = image
         self.mask = pygame.mask.from_surface(image)
         self.rectangle = image.get_rect()
-        self.rectangle.center = (random.randint(50, width - 50), random.randint(50, height - 50))
+
+        self.rectangle.center = (random.randint(50, width - 80), random.randint(50, height - 80)) # place the money bag in a random location
+
+        self.money = random.randint(1, 30) # set a money amount
 
     def draw(self, screen):
         # Same as Sprite
@@ -179,11 +180,7 @@ def main():
 
     enemy_sprites = []
 
-
-    #(screen, enemy_image)
-    # Make some number of enemies that will bounce around the screen.
-    # Make a new Enemy instance each loop and add it to enemy_sprites.
-
+    # Create police
     for i in range(20):
         if random.randint(0, 1):
             enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(1, 3), random.randint(1, 3)))
@@ -191,31 +188,35 @@ def main():
             enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(-3, -1), random.randint(-3, -1)))
 
     # This is the character you control. Choose your image.
+
+    # Load animation images
     player_image1 = pygame.image.load("LF_BG1.png").convert_alpha()
     player_image2 = pygame.image.load("RF_BG-1.png").convert_alpha()
+
+    # Resize images
     player_image1 = pygame.transform.smoothscale(player_image1, (40, 40))
     player_image2 = pygame.transform.smoothscale(player_image2, (40, 40))
-    player_sprite = Sprite(player_image1, player_image2)
-    life = 3
+    player_sprite = Sprite(player_image1, player_image2) # create an object
+    life = 20 # money in game
 
     # This is the powerup image. Choose your image.
     powerup_image = pygame.image.load("Money_Bag.png").convert_alpha()
     powerup_image1 = pygame.transform.smoothscale(powerup_image, (80, 80))
     # Start with an empty list of powerups and add them as the game runs.
     powerups = []
-    powerups.append(PowerUp(powerup_image1, 600, 600))
 
+    # Load music
+    pygame.mixer.music.load("Gangsta Music.ogg", 'ogg') # Credit to: Michael Hunter
 
-    pygame.mixer.music.load("Gangsta Music.ogg", 'ogg')
-
+    # Set the animation timer
     anim_counter = 0
 
     # Main part of the game
     is_playing = True
-    # while loop
+
+    # Play music
     pygame.mixer.music.play(-1)
-    while is_playing and life > 0:# while is_playing is True, repeat
-    # Modify the loop to stop when life is <= to 0.
+    while is_playing and life > 0:
 
         # Check for events
         for event in pygame.event.get():
@@ -227,7 +228,8 @@ def main():
         pos = pygame.mouse.get_pos()
         player_sprite.set_position(pos)
 
-        if anim_counter > 1000:
+        # Check to see if the animation timer is up
+        if anim_counter > 500:
             player_sprite.animate()
             anim_counter = 0
         # Loop over the enemy sprites. If the player sprite is
@@ -236,28 +238,20 @@ def main():
         # of the game loop - experiment to find a small value to deduct that
         # makes the game challenging but not frustrating.
 
+
+        # Check if Police have collided with player
         for i in enemy_sprites:
             if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
-                life -= 0.1
+                life -= random.randint(1, 4) # Pay bribe
 
-        # Loop over the powerups. If the player sprite is colliding, add
-        # 1 to the life.
 
+        # Check to see if Player is next to a money bag
         for i in powerups:
             if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
-                life += 1
-                player_sprite.Level()
-                print(player_sprite.xp_counter)
-
-                    # player_sprite.Level()
-                    # print(player_sprite.xp_counter)
-
-
-        # Make a list comprehension that removes powerups that are colliding with
-        # the player sprite.
-        for i in powerups:
-            if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
+                life += i.money
+                player_sprite.Level() # Add xp to the player
                 powerups.remove(i)
+
 
         # Loop over the enemy_sprites. Each enemy should call move and bounce.
         for i in enemy_sprites:
@@ -269,12 +263,9 @@ def main():
         # Choose a random number. Use the random number to decide to add a new
         # powerup to the powerups list. Experiment to make them appear not too
         # often, so the game is challenging.
-        if len(powerups) < 3:
-            for i in range(1):
-                x =  random.randint(1, 300)
-                if x == random.randint(1, 100):
-                    for i in range(1):
-                        powerups.append(PowerUp(powerup_image, 600, 600))
+        if len(powerups) < 4:
+            if random.randint(1, 100) == random.randint(1, 100):
+                powerups.append(PowerUp(powerup_image, 600, 600))
 
         # Erase the screen with a background color
         screen.fill((0,100,50)) # fill the window with a color
@@ -287,11 +278,12 @@ def main():
 
         player_sprite.draw(screen)
 
-        # Write the life to the screen.
-        text = "Money: " + str('%.1f' % life)
+        # Write the money to the screen.
+        text = "Money: $" + str(life)
         label = myfont.render(text, True, (255, 255, 0))
         screen.blit(label, (20, 20))
 
+        # Write the player's level to the screen
         level = "Level " + str(player_sprite.current_level)
         if player_sprite.current_level == 0:
             level += ' nobody'
@@ -321,6 +313,13 @@ def main():
             level += ' Godfather'
         label = myfont.render(level, True, (255, 255, 0))
         screen.blit(label, (300, 20))
+
+        # Write the player's XP to the screen
+        xp_txt = "XP: " + str(player_sprite.xp_counter) + '/10'
+        label = myfont.render(xp_txt, True, (255, 255, 0))
+        screen.blit(label, (20, 50))
+
+
         # Bring all the changes to the screen into view
         pygame.display.update()
         # Pause for a few milliseconds
@@ -329,7 +328,7 @@ def main():
 
     # Once the game loop is done, pause, close the window and quit.
     # Pause for a few seconds
-    pygame.time.wait(20)
+    pygame.time.wait(2000)
     pygame.quit()
     sys.exit()
 

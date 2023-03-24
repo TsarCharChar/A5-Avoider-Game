@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f09b3d80-21b5-4d82-ac60-8e7517b924aa" name="Changes" comment="added moneybag image and burular image.">
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-    </list>
+    <list default="true" id="f09b3d80-21b5-4d82-ac60-8e7517b924aa" name="Changes" comment="Fixed money bag image and scale." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,7 +57,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679615732786</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Fixed money bag image and scale.">
+      <created>1679621319737</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1679621319737</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -77,6 +82,7 @@
     <MESSAGE value="added collision,&#10;random powerups spawning, powerups and enemy despawning.&#10;In addition added xp counter for when powerpus collected" />
     <MESSAGE value="added powerup adding to lvling&#10;commeted out till use is decied on." />
     <MESSAGE value="added moneybag image and burular image." />
-    <option name="LAST_COMMIT_MESSAGE" value="added moneybag image and burular image." />
+    <MESSAGE value="Fixed money bag image and scale." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed money bag image and scale." />
   </component>
 </project>

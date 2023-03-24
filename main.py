@@ -193,10 +193,11 @@ def main():
     life = 3
 
     # This is the powerup image. Choose your image.
-    powerup_image = pygame.image.load("Burger.png").convert_alpha()
+    powerup_image = pygame.image.load("Money_Bag.png").convert_alpha()
+    powerup_image1 = pygame.transform.smoothscale(powerup_image, (80, 80))
     # Start with an empty list of powerups and add them as the game runs.
     powerups = []
-    powerups.append(PowerUp(powerup_image,600,600))
+    powerups.append(PowerUp(powerup_image1,600,600))
 
 
     clock = pygame.time.Clock()

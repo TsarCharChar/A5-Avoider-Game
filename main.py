@@ -1,6 +1,5 @@
 import pygame, sys, math, random
 
-
 # Test if two sprite masks overlap
 def pixel_collision(mask1, rect1, mask2, rect2):
     offset_x = rect2[0] - rect1[0]
@@ -8,7 +7,6 @@ def pixel_collision(mask1, rect1, mask2, rect2):
     # See if the two masks at the offset are overlapping.
     overlap = mask1.overlap(mask2, (offset_x, offset_y))
     return overlap
-
 
 def player_delay(clock, time, counter, player):
     counter += clock.tick()
@@ -20,13 +18,14 @@ def player_delay(clock, time, counter, player):
 
 # A basic Sprite class that can draw itself, move, and test collisions
 class Sprite:
-    def __init__(self, image):
+    def __init__(self, image, other_image):
         self.image = image
-        self.display_image = self.image[0]
-        self.rectangle = image[0].get_rect()
-        self.mask = pygame.mask.from_surface(image[0])
+        self.other_image = other_image
+        self.display_image = self.image
+        self.rectangle = image.get_rect()
+        self.mask = pygame.mask.from_surface(image)
         self.left_foot = False
-        self.anim_counter = 0
+
 
         # xp accumulator variable
         self.xp_counter = 0
@@ -41,10 +40,15 @@ class Sprite:
         return pixel_collision(self.mask, self.rectangle, other_sprite.mask, other_sprite.rectangle)
 
     def animate(self):
-        if self.anim_counter == len(self.image):
-            self.anim_counter = 0
-        self.display_image = self.image[self.anim_counter]
-        self.anim_counter += 1
+        if self.left_foot:
+           self.left_foot = False
+           self.display_image = self.other_image
+
+        else:
+            self.left_foot = True
+            self.display_image = self.image
+
+
 
     # level will make it easier to have specific affects (astetic or not) take place in a trackable and adjustable situation
     def Level(self):
@@ -138,7 +142,6 @@ class Enemy:
     def draw(self, screen):
         screen.blit(self.image, self.rectangle)
 
-
 class PowerUp:
     def __init__(self, image, width, height):
         # Set the PowerUp position randomly like is done for the Enemy class.
@@ -151,7 +154,6 @@ class PowerUp:
     def draw(self, screen):
         # Same as Sprite
         screen.blit(self.image, self.rectangle)
-
 
 def main():
     # Setup pygame
@@ -173,7 +175,12 @@ def main():
 
     enemy_sprites = []
 
-    for i in range(15):
+
+    #(screen, enemy_image)
+    # Make some number of enemies that will bounce around the screen.
+    # Make a new Enemy instance each loop and add it to enemy_sprites.
+
+    for i in range(20):
         if random.randint(0, 1):
             enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(1, 3), random.randint(1, 3)))
         else:
@@ -182,14 +189,16 @@ def main():
     # This is the character you control. Choose your image.
     player_image1 = pygame.image.load("LF1.png").convert_alpha()
     player_image2 = pygame.image.load("RF-1.png").convert_alpha()
-    player_sprite = Sprite([player_image1, player_image2])
+    player_sprite = Sprite(player_image1, player_image2)
     life = 3
 
     # This is the powerup image. Choose your image.
-    powerup_image = pygame.image.load("Burger.png").convert_alpha()
+    powerup_image = pygame.image.load("Money_Bag.png").convert_alpha()
+    powerup_image1 = pygame.transform.smoothscale(powerup_image, (80, 80))
     # Start with an empty list of powerups and add them as the game runs.
     powerups = []
-    powerups.append(PowerUp(powerup_image, 600, 600))
+    powerups.append(PowerUp(powerup_image1,600,600))
+
 
     clock = pygame.time.Clock()
     anim_counter = 0
@@ -197,8 +206,8 @@ def main():
     # Main part of the game
     is_playing = True
     # while loop
-    while is_playing and life > 0:  # while is_playing is True, repeat
-        # Modify the loop to stop when life is <= to 0.
+    while is_playing and life > 0:# while is_playing is True, repeat
+    # Modify the loop to stop when life is <= to 0.
 
         # Check for events
         for event in pygame.event.get():
@@ -219,15 +228,14 @@ def main():
         # of the game loop - experiment to find a small value to deduct that
         # makes the game challenging but not frustrating.
 
-        for i in enemy_sprites:
-            if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
-                life -= 0.5
-                enemy_sprites.remove(i)
-                del i
-                enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(-3, 3), random.randint(-3, 3)))
+            for i in enemy_sprites:
+                if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
+                    life -= 0.1
+                    enemy_sprites.remove(i)
+                    enemy_sprites.append(Enemy(enemy_image, 600, 600, random.randint(-3, -1), random.randint(-3, -1)))
 
-            # Loop over the powerups. If the player sprite is colliding, add
-            # 1 to the life.
+        # Loop over the powerups. If the player sprite is colliding, add
+        # 1 to the life.
 
             for i in powerups:
                 if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
@@ -236,8 +244,9 @@ def main():
                     # player_sprite.Level()
                     # print(player_sprite.xp_counter)
 
-            # Make a list comprehension that removes powerups that are colliding with
-            # the player sprite.
+
+        # Make a list comprehension that removes powerups that are colliding with
+        # the player sprite.
             for i in powerups:
                 if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
                     powerups.remove(i)
@@ -247,18 +256,20 @@ def main():
             i.bounce(width, height)
             i.move()
 
+
+
         # Choose a random number. Use the random number to decide to add a new
         # powerup to the powerups list. Experiment to make them appear not too
         # often, so the game is challenging.
-        if len(powerups) < 2:
+        if len(powerups) < 3:
             for i in range(1):
-                x = random.randint(1, 300)
+                x =  random.randint(1, 300)
                 if x == random.randint(1, 100):
-                    for i in range(1):
+                    for i in range( 1):
                         powerups.append(PowerUp(powerup_image, 600, 600))
 
         # Erase the screen with a background color
-        screen.fill((0, 100, 50))  # fill the window with a color
+        screen.fill((0,100,50)) # fill the window with a color
 
         # Draw the characters
         for enemy_sprite in enemy_sprites:
@@ -269,7 +280,7 @@ def main():
         player_sprite.draw(screen)
 
         # Write the life to the screen.
-        text = "Life: " + str('%.1f' % life)
+        text = "Life: " + str('%.1f'%life)
         label = myfont.render(text, True, (255, 255, 0))
         screen.blit(label, (20, 20))
 
@@ -284,7 +295,6 @@ def main():
     pygame.time.wait(20)
     pygame.quit()
     sys.exit()
-
 
 if __name__ == "__main__":
     main()

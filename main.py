@@ -34,6 +34,21 @@ def pixel_collision(mask1, rect1, mask2, rect2):
     return overlap
 
 
+def spawn_cops(sprite_list):
+    # Choose your own image
+    enemy1 = pygame.image.load("cop_left_Foot.png").convert_alpha()
+    enemy2 = pygame.image.load("cop_right_foot.png").convert_alpha()
+    # Here is an example of scaling it to fit a 50x50 pixel size.
+    enemy_image1 = pygame.transform.smoothscale(enemy1, (50, 50))
+    enemy_image2 = pygame.transform.smoothscale(enemy2, (50, 50))
+
+    # Create police
+    for i in range(20):
+        if random.randint(0, 1):
+            sprite_list.append(Enemy(enemy_image1, enemy_image2, 600, 600, random.randint(1, 3), random.randint(1, 3)))
+        else:
+            sprite_list.append(Enemy(enemy_image2, enemy_image1, 600, 600, random.randint(-3, -1), random.randint(-3, -1)))
+
 # A basic Sprite class that can draw itself, move, and test collisions
 class Sprite:
     def __init__(self, image, other_image):
@@ -71,17 +86,19 @@ class Sprite:
 
 
     # level will make it easier to have specific affects (astetic or not) take place in a trackable and adjustable situation
-    def Level(self):
+    def Level(self, feed):
         self.xp_counter += random.randint(1, 4)
         if self.xp_counter < 10:
             self.speed = (self.speed[0] - 1, self.speed[1] - 1)
         else:
-            self.LevelUp()
+            self.LevelUp(feed)
             self.xp_counter = 0
 
-    def LevelUp(self):
+    def LevelUp(self, feed):
         self.speed = (self.speed[0] + 10, self.speed[1] + 10)
         self.current_level += 1
+        if self.current_level == 1:
+            spawn_cops(feed)
 
 
 class Enemy:
@@ -185,22 +202,8 @@ def main():
     screen = pygame.display.set_mode((width, height))
 
     # Load image assets
-    # Choose your own image
-    enemy1 = pygame.image.load("cop_left_Foot.png").convert_alpha()
-    enemy2 = pygame.image.load("cop_right_foot.png").convert_alpha()
-    # Here is an example of scaling it to fit a 50x50 pixel size.
-    enemy_image1 = pygame.transform.smoothscale(enemy1, (50, 50))
-    enemy_image2 = pygame.transform.smoothscale(enemy2, (50, 50))
 
     enemy_sprites = []
-
-    # Create police
-    for i in range(20):
-        if random.randint(0, 1):
-            enemy_sprites.append(Enemy(enemy_image1, enemy_image2, 600, 600, random.randint(1, 3), random.randint(1, 3)))
-        else:
-            enemy_sprites.append(Enemy(enemy_image2, enemy_image1, 600, 600, random.randint(-3, -1), random.randint(-3, -1)))
-
     # This is the character you control. Choose your image.
 
     # Load animation images
@@ -259,13 +262,14 @@ def main():
         for i in enemy_sprites:
             if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
                 life -= random.randint(1, 4) # Pay bribe
+                player_sprite.xp_counter = 0
 
 
         # Check to see if Player is next to a money bag
         for i in powerups:
             if pixel_collision(player_sprite.mask, player_sprite.rectangle, i.mask, i.rectangle):
                 life += i.money
-                player_sprite.Level() # Add xp to the player
+                player_sprite.Level(enemy_sprites) # Add xp to the player
                 powerups.remove(i)
 
 

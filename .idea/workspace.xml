@@ -6,9 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f09b3d80-21b5-4d82-ac60-8e7517b924aa" name="Changes" comment="Fixed money bag image and scale.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cop_stationary.png" beforeDir="false" afterPath="$PROJECT_DIR$/Cop_stationary.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cop_left_Foot.png" beforeDir="false" afterPath="$PROJECT_DIR$/cop_left_Foot.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cop_right_foot.png" beforeDir="false" afterPath="$PROJECT_DIR$/cop_right_foot.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +29,30 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RunManager">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="A5-Avoider-Game" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\notth\OneDrive\Desktop\Other SH!T\FACEIT Webscraper\A5\Scripts\python.exe" />
+      <option name="SDK_NAME" value="Python 3.11 (A5)" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">

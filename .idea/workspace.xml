@@ -5,15 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f09b3d80-21b5-4d82-ac60-8e7517b924aa" name="Changes" comment="Fixed money bag image and scale.">
+      <change afterPath="$PROJECT_DIR$/menu.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cop_stationary.png" beforeDir="false" afterPath="$PROJECT_DIR$/Cop_stationary.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cop_left_Foot.png" beforeDir="false" afterPath="$PROJECT_DIR$/cop_left_Foot.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cop_right_foot.png" beforeDir="false" afterPath="$PROJECT_DIR$/cop_right_foot.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />

@@ -7,8 +7,10 @@
 # How to Play:
 #   Use mouse to move the character
 #   Collect Money Bags and rise through the crime world
-#   Avoid the Cops
+#   After your first level, Cops will spawn. AVOID THE COPS
 #   If you touch a cop, you need to pay money, if you don't have enough money then you get arrested and you lose
+#   After you become a cook, you will be hunted by the FBI
+#   Touching a FBI agent will force them to arrest you and you will lose
 
 
 
@@ -172,6 +174,13 @@ class Enemy:
             self.display_image = self.image1
 
 
+class FBI(Enemy):
+
+   def __init__(self, pos, isUp):
+       super(FBI, self).__init__()
+
+
+
 class PowerUp:
     def __init__(self, image, width, height):
         # Set the PowerUp position randomly like is done for the Enemy class.
@@ -192,7 +201,6 @@ class PowerUp:
 def main():
     # Setup pygame
     pygame.init()
-
     # Get a font for printing the lives left on the screen.
     myfont = pygame.font.SysFont('monospace', 24)
 
@@ -214,7 +222,7 @@ def main():
     player_image1 = pygame.transform.smoothscale(player_image1, (40, 40))
     player_image2 = pygame.transform.smoothscale(player_image2, (40, 40))
     player_sprite = Sprite(player_image1, player_image2) # create an object
-    life = 20 # money in game
+    life = 25 # money in game
 
     # This is the powerup image. Choose your image.
     powerup_image = pygame.image.load("Money_Bag.png").convert_alpha()
@@ -233,6 +241,8 @@ def main():
 
     # Play music
     pygame.mixer.music.play(-1)
+
+    # Begin Game
     while is_playing and life > 0:
 
         # Check for events
@@ -256,7 +266,6 @@ def main():
         # A player is likely to overlap an enemy for a few iterations
         # of the game loop - experiment to find a small value to deduct that
         # makes the game challenging but not frustrating.
-
 
         # Check if Police have collided with player
         for i in enemy_sprites:

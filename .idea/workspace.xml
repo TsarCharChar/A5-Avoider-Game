@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f09b3d80-21b5-4d82-ac60-8e7517b924aa" name="Changes" comment="Menue basic funcions set buttons anc be detected when mose is over them">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/menu.py" afterDir="false" />
-    </list>
+    <list default="true" id="f09b3d80-21b5-4d82-ac60-8e7517b924aa" name="Changes" comment="Breifcase image added" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -118,7 +115,21 @@
       <option name="project" value="LOCAL" />
       <updated>1681446498443</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Ensureing imagesd were added">
+      <created>1681447704547</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1681447704547</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Breifcase image added">
+      <created>1681448097225</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1681448097225</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -139,6 +150,8 @@
     <MESSAGE value="Fixed money bag image and scale." />
     <MESSAGE value="menu beginings" />
     <MESSAGE value="Menue basic funcions set buttons anc be detected when mose is over them" />
-    <option name="LAST_COMMIT_MESSAGE" value="Menue basic funcions set buttons anc be detected when mose is over them" />
+    <MESSAGE value="Ensureing imagesd were added" />
+    <MESSAGE value="Breifcase image added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Breifcase image added" />
   </component>
 </project>

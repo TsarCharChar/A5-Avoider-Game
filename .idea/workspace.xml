@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f09b3d80-21b5-4d82-ac60-8e7517b924aa" name="Changes" comment="Fixed money bag image and scale.">
-      <change afterPath="$PROJECT_DIR$/menu.py" afterDir="false" />
+    <list default="true" id="f09b3d80-21b5-4d82-ac60-8e7517b924aa" name="Changes" comment="menu beginings">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/menu.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +46,6 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="C:\Users\notth\OneDrive\Desktop\Other SH!T\FACEIT Webscraper\A5\Scripts\python.exe" />
-      <option name="SDK_NAME" value="Python 3.11 (A5)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -105,7 +104,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679621367644</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="menu beginings">
+      <created>1681412308046</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1681412308046</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -124,6 +130,7 @@
     <MESSAGE value="added powerup adding to lvling&#10;commeted out till use is decied on." />
     <MESSAGE value="added moneybag image and burular image." />
     <MESSAGE value="Fixed money bag image and scale." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed money bag image and scale." />
+    <MESSAGE value="menu beginings" />
+    <option name="LAST_COMMIT_MESSAGE" value="menu beginings" />
   </component>
 </project>

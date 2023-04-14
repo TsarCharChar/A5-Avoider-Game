@@ -26,9 +26,9 @@ class button:
         screen.blit(self.image, self.rectangle)
 
     #customizing collision to mouse and buttons
-    def is_colliding(self): # check if colliding
-        pos = pygame.mouse.get_pos()
-        return pixel_collision(self.mask, self.rectangle, pos)
+    # def is_colliding(self): # check if colliding
+    #     pos = pygame.mouse.get_pos()
+    #     return pixel_collision(self.mask, self.rectangle, pos)
 
 
 

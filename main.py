@@ -45,12 +45,16 @@ def spawn_cops(sprite_list):
     enemy_image2 = pygame.transform.smoothscale(enemy2, (50, 50))
 
     # Create police
-    for i in range(20):
+    for i in range(10):
         if random.randint(0, 1):
             sprite_list.append(Enemy(enemy_image1, enemy_image2, 600, 600, random.randint(1, 3), random.randint(1, 3)))
         else:
             sprite_list.append(Enemy(enemy_image2, enemy_image1, 600, 600, random.randint(-3, -1), random.randint(-3, -1)))
-
+    for i in range(10):
+        if random.randint(0, 1):
+            sprite_list.append(DropEnemy(enemy_image1, enemy_image2, 600, 600, random.randint(1, 3), random.randint(1, 3)))
+        else:
+            sprite_list.append(DropEnemy(enemy_image2, enemy_image1, 600, 600, random.randint(-3, -1), random.randint(-3, -1)))
 # A basic Sprite class that can draw itself, move, and test collisions
 class Sprite:
     def __init__(self, image, other_image):
@@ -174,10 +178,21 @@ class Enemy:
             self.display_image = self.image1
 
 
-class FBI(Enemy):
+class DropEnemy(Enemy):
 
-   def __init__(self, pos, isUp):
-       super(FBI, self).__init__()
+    def __init__(self, image1, image2, width, height, vx, vy):
+        super().__init__(image1, image2, width, height, vx, vy)
+        self.position = self.rectangle.center
+
+    def move(self):
+        vx, vy = self.speed
+        vy += 0.1
+        self.speed = (vx, vy)
+        x, y = self.position
+        x += vx
+        y += vy
+        self.position = (x, y)
+        self.rectangle.center = self.position
 
 
 
@@ -198,6 +213,29 @@ class PowerUp:
         # Same as Sprite
         screen.blit(self.image, self.rectangle)
 
+
+class PowerUpRotate(PowerUp):
+    def __init__(self, image, width, height):
+        super().__init__(image, width, height)
+        self.angle = 0
+        self.original_image = image
+
+    def draw(self, screen):
+        rotated_image = pygame.transform.rotate(self.original_image, self.angle)
+        self.image = rotated_image
+
+        centerHolder = self.rectangle.center
+
+        self.rectangle = self.image.get_rect()
+
+        self.rectangle.center = centerHolder
+
+        self.mask = pygame.mask.from_surface(self.image)
+
+        self.angle += 2
+
+        super().draw(screen)
+
 def main():
     # Setup pygame
     pygame.init()
@@ -213,7 +251,6 @@ def main():
 
     enemy_sprites = []
     # This is the character you control. Choose your image.
-
     # Load animation images
     player_image1 = pygame.image.load("LF_BG1.png").convert_alpha()
     player_image2 = pygame.image.load("RF_BG-1.png").convert_alpha()
@@ -294,7 +331,10 @@ def main():
         # often, so the game is challenging.
         if len(powerups) < 4:
             if random.randint(1, 100) == random.randint(1, 100):
-                powerups.append(PowerUp(powerup_image, 600, 600))
+                if False:
+                    powerups.append(PowerUp(powerup_image, 600, 600))
+                else:
+                    powerups.append(PowerUpRotate(powerup_image, 600, 600))
 
         # Erase the screen with a background color
         screen.fill((0,100,50)) # fill the window with a color
@@ -340,6 +380,8 @@ def main():
 
         else:
             level += ' Godfather'
+
+
         label = myfont.render(level, True, (255, 255, 0))
         screen.blit(label, (300, 20))
 
